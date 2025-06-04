@@ -24,7 +24,7 @@ const WelcomeScreen = () => {
         </p>
       </div>
 
-      <button className="continue-button" onClick={() => navigate('/feedback')}>
+      <button className="continue-button" onClick={() => navigate('/feedback-category')}>
         Continue
       </button>
     </div>

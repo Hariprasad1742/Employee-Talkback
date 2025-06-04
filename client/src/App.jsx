@@ -1,14 +1,13 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import WelcomeScreen from './components/WelcomeScreen';
-import FeedbackPage from './components/FeedbackPage';
+import FeedbackCategoryPage from './components/FeedbackCategoryPage';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<WelcomeScreen />} />
-        <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="/feedback-category" element={<FeedbackCategoryPage />} />
       </Routes>
     </Router>
   );

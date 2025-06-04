@@ -23,7 +23,7 @@ function FeedbackCategoryPage() {
           <div
             key={index}
             className="category-card"
-            onClick={() => navigate(`/feedback/${cat.route}`)}
+            onClick={() => navigate(`/feedback-category/${cat.route}`)}
           >
             <img src={cat.image} alt={cat.name} className="category-image" />
             <p>{cat.name}</p>

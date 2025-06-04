@@ -7,32 +7,84 @@ function WaitingRoom() {
     phone: '',
     problem: '',
     difficultyType: '',
-    image: null,
+    imageBase64: '', // store base64 string here
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
-  const handleChange = (e) => {
+  // Convert file to base64 string
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleChange = async (e) => {
     const { name, files, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+
+    if (files) {
+      if (files.length > 0) {
+        try {
+          const base64 = await fileToBase64(files[0]);
+          setFormData((prev) => ({
+            ...prev,
+            imageBase64: base64,
+          }));
+        } catch (err) {
+          console.error('Error converting file to base64', err);
+        }
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Submitted data:', formData);
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-  const openFileDialog = () => {
-    fileInputRef.current.click();
-  };
+  try {
+    const response = await fetch('http://localhost:5000/api/waitingroom', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // rename imageBase64 to image here
+      body: JSON.stringify({
+        name: formData.name,
+        phone: formData.phone,
+        difficultyType: formData.difficultyType,
+        problem: formData.problem,
+        image: formData.imageBase64,
+      }),
+    });
 
-  const openCameraDialog = () => {
-    cameraInputRef.current.click();
-  };
+    if (response.ok) {
+      alert('Feedback submitted successfully!');
+      setFormData({
+        name: '',
+        phone: '',
+        problem: '',
+        difficultyType: '',
+        imageBase64: '',
+      });
+    } else {
+      alert('Failed to submit feedback');
+    }
+  } catch (error) {
+    console.error('Submit error:', error);
+    alert('Error submitting feedback');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <div className="form-container">
@@ -60,7 +112,7 @@ function WaitingRoom() {
         <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
           <button
             type="button"
-            onClick={openCameraDialog}
+            onClick={() => cameraInputRef.current.click()}
             style={{
               backgroundColor: '#27ae60',
               color: 'white',
@@ -75,7 +127,7 @@ function WaitingRoom() {
           </button>
           <button
             type="button"
-            onClick={openFileDialog}
+            onClick={() => fileInputRef.current.click()}
             style={{
               backgroundColor: '#8e44ad',
               color: 'white',
@@ -108,7 +160,9 @@ function WaitingRoom() {
           onChange={handleChange}
         />
 
-        <button type="submit">Submit Feedback</button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
+        </button>
       </form>
     </div>
   );

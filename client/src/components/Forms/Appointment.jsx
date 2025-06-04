@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './FormStyle.css';
 
 function Appointment() {
@@ -10,8 +10,11 @@ function Appointment() {
     image: null,
   });
 
+  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, files, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: files ? files[0] : value,
@@ -21,7 +24,14 @@ function Appointment() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Submitted data:', formData);
-    // TODO: send to backend
+  };
+
+  const openFileDialog = () => {
+    fileInputRef.current.click();
+  };
+
+  const openCameraDialog = () => {
+    cameraInputRef.current.click();
   };
 
   return (
@@ -48,7 +58,56 @@ function Appointment() {
         <textarea name="problem" rows="4" value={formData.problem} onChange={handleChange} required />
 
         <label>Upload Image (Optional)</label>
-        <input type="file" name="image" accept="image/*" onChange={handleChange} />
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <button
+            type="button"
+            onClick={openCameraDialog}
+            style={{
+              backgroundColor: '#27ae60',
+              color: 'white',
+              border: 'none',
+              padding: '6px 12px',
+              fontSize: '13px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Take Photo
+          </button>
+          <button
+            type="button"
+            onClick={openFileDialog}
+            style={{
+              backgroundColor: '#8e44ad',
+              color: 'white',
+              border: 'none',
+              padding: '6px 12px',
+              fontSize: '13px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Choose Existing
+          </button>
+        </div>
+
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          capture="environment"
+          style={{ display: 'none' }}
+          ref={cameraInputRef}
+          onChange={handleChange}
+        />
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          style={{ display: 'none' }}
+          ref={fileInputRef}
+          onChange={handleChange}
+        />
 
         <button type="submit">Submit Feedback</button>
       </form>

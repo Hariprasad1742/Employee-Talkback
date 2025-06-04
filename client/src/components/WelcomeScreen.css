@@ -1,0 +1,97 @@
+/* Make the entire screen a flex container */
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  font-family: Arial, sans-serif;
+  color: #2c3e50;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container */
+.welcome-container {
+  width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Desktop-specific max width & spacing */
+@media (min-width: 768px) {
+  .welcome-container {
+    max-width: 900px;
+    padding: 40px;
+  }
+}
+
+/* Logo */
+.welcome-logo {
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 30px;
+}
+
+/* Text */
+.welcome-text h2, 
+.welcome-text h3, 
+.welcome-text h4, 
+.welcome-text p {
+  margin: 10px 0;
+  color: #2c3e50;
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+/* Button */
+.continue-button {
+  margin-top: 40px;
+  padding: 14px 50px;
+  font-size: 20px;
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 350px;
+}
+
+.continue-button:hover {
+  background-color: #3498db;
+}
+
+/* Small screen tweaks */
+@media (max-width: 480px) {
+  body {
+    align-items: flex-start; /* top align on small screens */
+  }
+
+  .welcome-logo {
+    width: 120px;
+  }
+
+  .continue-button {
+    font-size: 16px;
+    padding: 10px 30px;
+  }
+
+  .welcome-text h2, 
+  .welcome-text h3, 
+  .welcome-text h4, 
+  .welcome-text p {
+    max-width: 100%;
+    font-size: 14px;
+  }
+}
